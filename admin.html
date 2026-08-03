@@ -7,20 +7,67 @@
 
 <meta name="viewport"
 content="width=device-width,initial-scale=1">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 <title>لوحة الإدارة</title>
 
 <!-- ===== Socket.IO ===== -->
 
 <script src="/socket.io/socket.io.js"></script>
 
+<script>
+/* ===== SERVICES ===== */
+let services = JSON.parse(localStorage.getItem('services') || '[]');
+
+function openServices() {
+
+    const modal = new bootstrap.Modal(
+        document.getElementById("servicesModal")
+    );
+
+    modal.show();
+
+    renderServices();
+
+}
+
+function closeServices(){
+
+    bootstrap.Modal
+    .getInstance(
+        document.getElementById("servicesModal")
+    )
+    .hide();
+
+}
+
+function addService() {
+    const service = {
+        jobNo: document.getElementById('jobNo').value,
+        date: document.getElementById('jobDate').value,
+        memberNo: document.getElementById('memberNo').value,
+        mobile: document.getElementById('mobile').value,
+        vehicleNo: document.getElementById('vehicleNo').value,
+        from: document.getElementById('fromLocation').value,
+        to: document.getElementById('toLocation').value,
+        vehicleModel: document.getElementById('vehicleModel').value,
+        color: document.getElementById('vehicleColor').value,
+        price: document.getElementById('price').value,
+        km: document.getElementById('km').value
+    };
+
+    services.push(service);
+    localStorage.setItem('services', JSON.stringify(services));
+    renderServices();
+}
+</script>
 <!-- ===== Leaflet ===== -->
 
 <link rel="stylesheet"
-href="/leaflet/leaflet.css">
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
-<script src="/leaflet/leaflet.js"></script>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 
 *{
@@ -336,6 +383,242 @@ button:hover{
 
 }
 
+/* ===== Services Modal ===== */
+
+#addServiceModal .modal-content{
+    background:#111827;
+    color:#fff;
+    border:2px solid #d4af37;
+    border-radius:18px;
+}
+
+#addServiceModal .modal-header{
+    background:#0f172a;
+    color:#d4af37;
+}
+
+#addServiceModal input,
+#addServiceModal select{
+    background:#1f2937;
+    color:#fff;
+    border:1px solid #d4af37;
+}
+
+#addServiceModal input:focus{
+    background:#374151;
+    color:#fff;
+    border-color:#facc15;
+    box-shadow:0 0 10px rgba(250,204,21,.3);
+}
+
+#servicesModal .modal-body{
+    background:#0f172a;
+}
+
+#servicesModal .table{
+    color:#fff;
+}
+
+#servicesModal .table thead{
+    background:#d4af37;
+    color:#111827;
+}
+
+#servicesModal .table thead th{
+    background:#d4af37 !important;
+    color:#111827 !important;
+    border-color:#8b6b00;
+}
+
+#servicesModal .table tbody tr{
+    background:#111827;
+    transition:.25s;
+}
+
+#servicesModal .table tbody tr:nth-child(even){
+    background:#1f2937;
+}
+
+#servicesModal .table tbody tr:hover{
+    background:#374151;
+}
+
+#servicesModal .table td{
+    border-color:#2d3748;
+    vertical-align:middle;
+}
+
+/* أزرار الفلاتر */
+
+#servicesModal .btn-info{
+    background:#2563eb;
+    border:none;
+}
+
+#servicesModal .btn-danger{
+    background:#dc2626;
+    border:none;
+}
+
+#servicesModal .btn-warning{
+    background:#f59e0b;
+    color:#111;
+    border:none;
+}
+
+#servicesModal .btn-success{
+    background:#16a34a;
+    border:none;
+}
+
+#servicesModal .btn-primary{
+    background:#d4af37;
+    color:#111827;
+    border:none;
+    font-weight:bold;
+}
+
+#servicesModal .btn-primary:hover{
+    background:#facc15;
+}
+
+/* DataTables */
+
+.dataTables_wrapper{
+    color:#fff;
+}
+
+.dataTables_wrapper input,
+.dataTables_wrapper select{
+    background:#111827;
+    color:#fff;
+    border:1px solid #d4af37;
+    border-radius:8px;
+}
+
+.dataTables_wrapper .paginate_button{
+    color:#fff !important;
+}
+
+.dataTables_wrapper .paginate_button.current{
+    background:#d4af37 !important;
+    color:#111827 !important;
+}
+
+.dt-buttons button{
+    background:#d4af37 !important;
+    color:#111827 !important;
+    border:none !important;
+    border-radius:8px !important;
+    margin:2px;
+}
+
+.timeline{
+
+    position:relative;
+
+    margin-left:15px;
+
+}
+
+.timeline::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:18px;
+
+    top:0;
+
+    bottom:0;
+
+    width:3px;
+
+    background:#dee2e6;
+
+}
+
+.timeline-item{
+
+    position:relative;
+
+    display:flex;
+
+    margin-bottom:25px;
+
+}
+
+.timeline-icon{
+
+    width:38px;
+
+    height:38px;
+
+    border-radius:50%;
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-right:15px;
+
+    z-index:2;
+
+}
+
+.timeline-content{
+
+    flex:1;
+
+    padding:5px 0;
+
+}
+
+#carsStats{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-bottom:10px;
+
+}
+
+.stat{
+
+    padding:8px 15px;
+
+    border-radius:8px;
+
+    color:white;
+
+    font-weight:bold;
+
+}
+
+.available{
+
+    background:#28a745;
+
+}
+
+.busy{
+
+    background:#dc3545;
+
+}
+
+.offline{
+
+    background:#6c757d;
+
+}
+
 </style>
 
 </head>
@@ -370,17 +653,28 @@ id="ordersList"></div>
 
 📍
 <span id="locationText">
----
 </span>
 
 <button onclick="openClientMap()">
 🗺️
 </button>
 
+<button onclick="downloadOrderFiles()">
+📥 تحميل الملفات
+</button>
+
 </div>
+
+<button onclick="openServices()">
+📝 الخدمات
+</button>
 
 <button onclick="openMap()">
 🚚 السائقين
+</button>
+
+<button onclick="openCars()">
+🚗 السيارات
 </button>
 
 <select id="statusSelect"
@@ -454,10 +748,53 @@ onclick="toggleRecord()">
 
 <div id="mapModal">
 
+<div id="carsStats" class="map-stats">
+
+<div class="stat available"
+onclick="filterCars('Available')">
+
+🟢
+<span id="availableCount">0</span>
+
+Available
+
+</div>
+
+<div class="stat busy"
+onclick="filterCars('Busy')">
+
+🔴
+<span id="busyCount">0</span>
+
+Busy
+
+</div>
+
+<div class="stat offline"
+onclick="filterCars('Offline')">
+
+⚫
+<span id="offlineCount">0</span>
+
+Offline
+
+</div>
+
+<div class="stat"
+style="background:#0ea5e9"
+onclick="filterCars('ALL')">
+
+🚗
+All
+
+</div>
+
+</div>
+
 <div id="mapHeader">
 
 <span>
-🗺️ تتبع السائقين
+🚗 تتبع السيارات
 </span>
 
 <button onclick="closeMap()">
@@ -470,27 +807,236 @@ onclick="toggleRecord()">
 
 </div>
 
+<!-- =========================
+     Cars Management Modal
+========================= -->
+
+<div id="carsModal"
+style="
+display:none;
+position:fixed;
+inset:0;
+background:#0f172a;
+z-index:999999;
+padding:20px;
+overflow:auto;
+">
+
+
+<div style="
+background:#111827;
+color:white;
+padding:20px;
+border-radius:15px;
+border:2px solid #d4af37;
+">
+
+
+<h2 style="color:#d4af37">
+🚗 إدارة السيارات
+</h2>
+
+
+<button onclick="closeCars()">
+✖ إغلاق
+</button>
+
+
+<button onclick="openAddCar()">
+➕ إضافة سيارة
+</button>
+
+
+<table
+style="
+width:100%;
+margin-top:20px;
+color:white;
+text-align:center;
+"
+border="1">
+
+
+<thead>
+
+<tr>
+
+<th>رقم</th>
+
+<th>السيارة</th>
+
+<th>اللوحة</th>
+
+<th>السائق</th>
+
+<th>الحالة</th>
+
+<th>إجراء</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="carsTable">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+</div>
+
 <audio id="notifySound">
 <source src="/sounds/notify.mp3">
 </audio>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
 <script>
 
 const socket = io();
 
+
+
+socket.on("newOrder",order=>{
+
+jobs.unshift(order);
+
+renderJobs();
+
+});
 let orders = [];
+
+let cars = [];
 
 let currentOrderId = null;
 
-let map;
-
 let markers = {};
+
+
 
 let mediaRecorder;
 
 let recordedChunks = [];
 
 let isRecording = false;
+
+function getCurrentTime(){
+
+    return new Date().toLocaleString();
+
+}
+
+function openCars(){
+
+    document.getElementById(
+        "carsModal"
+    ).style.display="block";
+
+
+    loadCars();
+
+}
+
+
+
+function closeCars(){
+
+    document.getElementById(
+        "carsModal"
+    ).style.display="none";
+
+}
+
+async function loadCars(){
+
+    const res = await fetch("/api/cars");
+
+    const data = await res.json();
+
+    if(data.success){
+
+        cars = data.cars;
+
+    }else{
+
+        cars = [];
+
+    }
+
+    renderCarsTable();
+
+}
+function renderCarsTable(){
+
+    const table =
+    document.getElementById(
+        "carsTable"
+    );
+
+
+    table.innerHTML="";
+
+
+    cars.forEach(car=>{
+
+
+        table.innerHTML += `
+
+        <tr>
+
+        <td>${car.id}</td>
+
+        <td>${car.name}</td>
+
+        <td>${car.plate}</td>
+
+        <td>
+        ${car.driver.name || car.driver}
+        </td>
+
+
+        <td>
+        ${car.status}
+        </td>
+
+
+        <td>
+
+        <button onclick="trackCar(${car.id})">
+        📍 تتبع
+        </button>
+
+        </td>
+
+
+        </tr>
+
+        `;
+
+
+    });
+
+
+}
 
 /* ===== Search ===== */
 
@@ -675,6 +1221,8 @@ function openOrder(id){
     });
 
 }
+
+
 
 /* ===== Render Messages ===== */
 
@@ -1076,46 +1624,429 @@ function openClientMap(){
     }
 }
 
-/* ===== Drivers Map ===== */
+function filterCars(status){
+
+    currentCarsFilter = status;
+
+    if(!map) return;
+
+    renderCars();
+
+}
+
+async function trackCar(id){
+
+    trackingCarId = id;
+
+    if(carsMarkers[id]){
+
+        map.setView(
+            carsMarkers[id].getLatLng(),
+            15
+        );
+
+        carsMarkers[id].openPopup();
+
+    }
+
+    // حذف المسار القديم إن وجد
+    if(carLines[id]){
+
+        map.removeLayer(
+            carLines[id]
+        );
+
+    }
+
+    // تحميل المسار من السيرفر
+    const res = await fetch(
+        `/api/tracks?carId=${id}&hours=24`
+    );
+
+    const data = await res.json();
+
+    if(!data.success)
+        return;
+
+    const points = data.tracks.map(t=>[
+        t.lat,
+        t.lng
+    ]);
+
+    carPaths[id] = points;
+
+    carLines[id] = L.polyline(
+        points,
+        {
+            color:"blue",
+            weight:5
+        }
+    ).addTo(map);
+
+}
+function updateCarsStats(cars){
+
+    let available = 0;
+    let busy = 0;
+    let offline = 0;
+
+    cars.forEach(car=>{
+
+        if(car.status==="Available")
+            available++;
+
+        else if(car.status==="Busy")
+            busy++;
+
+        else
+            offline++;
+
+    });
+
+    document.getElementById("availableCount").textContent = available;
+    document.getElementById("busyCount").textContent = busy;
+    document.getElementById("offlineCount").textContent = offline;
+
+}
+// ===============================
+// MAP VARIABLES
+// ===============================
+
+let map = null;
+
+let carsMarkers = {};
+
+let carsData = [];
+
+let currentCarsFilter = "ALL";
+
+let trackingCarId = null;
+
+let carPaths = {};
+
+let carLines = {};
+
+// ===============================
+// CAR STATUS ICONS
+// ===============================
+
+const carIcons = {
+
+    Available: L.icon({
+        iconUrl: "/images/car-green.png",
+        iconSize: [40,40],
+        iconAnchor: [20,20]
+    }),
+
+    Busy: L.icon({
+        iconUrl: "/images/car-red.png",
+        iconSize: [40,40],
+        iconAnchor: [20,20]
+    }),
+
+    Offline: L.icon({
+        iconUrl: "/images/car-gray.png",
+        iconSize: [40,40],
+        iconAnchor: [20,20]
+    })
+
+};
+
+
+// ===============================
+// FILTER
+// ===============================
+
+function filterCars(status){
+
+    currentCarsFilter = status;
+
+    renderCars();
+
+}
+
+
+// ===============================
+// STATS
+// ===============================
+
+function updateCarsStats(cars){
+
+    let available = 0;
+    let busy = 0;
+    let offline = 0;
+
+    cars.forEach(car=>{
+
+        if(car.status==="Available")
+            available++;
+
+        else if(car.status==="Busy")
+            busy++;
+
+        else
+            offline++;
+
+    });
+
+    document.getElementById("availableCount").textContent = available;
+    document.getElementById("busyCount").textContent = busy;
+    document.getElementById("offlineCount").textContent = offline;
+
+}
+
+
+// ===============================
+// RENDER CARS
+// ===============================
+
+function renderCars(){
+
+    if(!map) return;
+
+    Object.values(carsMarkers).forEach(marker=>{
+
+        map.removeLayer(marker);
+
+    });
+
+    carsMarkers = {};
+
+    updateCarsStats(carsData);
+
+    carsData.forEach(car=>{
+
+        if(
+            currentCarsFilter !== "ALL" &&
+            car.status !== currentCarsFilter
+        ){
+            return;
+        }
+
+        if(
+            car.lat == null ||
+            car.lng == null
+        ){
+            return;
+        }
+
+        const popupContent = `
+        <div style="text-align:center;direction:rtl">
+
+            <h3>🚗 ${car.name}</h3>
+
+            <hr>
+
+            <b>رقم السيارة:</b> ${car.plate}<br>
+
+            <b>السائق:</b> ${car.driver}<br>
+
+            <b>الهاتف:</b> ${car.phone}<br>
+
+            <b>الحالة:</b> ${car.status}<br><br>
+
+<button
+onclick="trackCar(${car.id})"
+style="
+background:#16a34a;
+color:white;
+border:0;
+padding:8px 15px;
+border-radius:5px;
+cursor:pointer;
+">
+
+📍 تتبع
+
+</button>
+
+            <button
+            onclick="callDriver('${car.phone}')"
+            style="
+                background:#2196f3;
+                color:white;
+                border:0;
+                padding:8px 15px;
+                border-radius:5px;
+                cursor:pointer;
+            ">
+                📞 اتصال
+            </button>
+
+        </div>
+        `;
+
+        carsMarkers[car.id] = L.marker(
+            [car.lat,car.lng],
+            {
+                icon: carIcons[car.status] || carIcons.Offline
+            }
+        )
+        .addTo(map)
+        .bindPopup(popupContent);
+
+    });
+
+}
+
+
+// ===============================
+// OPEN MAP
+// ===============================
 
 function openMap(){
 
-    document.getElementById(
-    'mapModal'
-    ).style.display='flex';
+    document.getElementById("mapModal").style.display = "flex";
 
     setTimeout(()=>{
 
         if(!map){
 
-            map =
-            L.map('driversMap')
-            .setView(
-            [30.0444,31.2357],
-            10
+            map = L.map("driversMap").setView(
+                [23.5880,58.3829],
+                11
             );
 
             L.tileLayer(
-            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            {
-                attribution:'OSM'
-            }
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    attribution:"© OpenStreetMap"
+                }
             ).addTo(map);
 
         }
 
         map.invalidateSize();
 
-    },100);
+        renderCars();
+
+        socket.emit("getCarsLocations");
+
+    },200);
+
 }
+
+
+// ===============================
+// CLOSE MAP
+// ===============================
 
 function closeMap(){
 
-    document.getElementById(
-    'mapModal'
-    ).style.display='none';
+    document.getElementById("mapModal").style.display="none";
+
 }
 
+
+// ===============================
+// RECEIVE ALL CARS
+// ===============================
+
+socket.on("carsLocations",(cars)=>{
+
+    carsData = cars;
+
+    renderCars();
+
+});
+
+
+// ===============================
+// RECEIVE ONE CAR UPDATE
+// ===============================
+
+socket.on("carMoved",(car)=>{
+
+
+    const index =
+    carsData.findIndex(
+        c=>c.id===car.id
+    );
+
+
+    if(index>=0){
+
+        carsData[index]=car;
+
+    }else{
+
+        carsData.push(car);
+
+    }
+
+
+
+    // حفظ المسار
+
+    if(!carPaths[car.id]){
+
+        carPaths[car.id]=[];
+
+    }
+
+
+    carPaths[car.id].push([
+        car.lat,
+        car.lng
+    ]);
+
+
+
+    // رسم الخط
+
+    if(carLines[car.id]){
+
+        carLines[car.id]
+        .setLatLngs(
+            carPaths[car.id]
+        );
+
+    }else{
+
+
+        carLines[car.id] =
+        L.polyline(
+            carPaths[car.id],
+            {
+                weight:5
+            }
+        )
+        .addTo(map);
+
+
+    }
+
+
+
+    // متابعة السيارة
+
+    if(
+        trackingCarId === car.id
+    ){
+
+        map.panTo([
+            car.lat,
+            car.lng
+        ]);
+
+    }
+
+
+    renderCars();
+
+
+});
+
+
+// ===============================
+// CALL DRIVER
+// ===============================
+
+function callDriver(phone){
+
+    window.location.href="tel:"+phone;
+
+}
 /* ===== Socket ===== */
 
 socket.on(
@@ -1244,7 +2175,1327 @@ document
 
 loadOrders();
 
+/* ===== Download Order Files ===== */
+
+function downloadOrderFiles(){
+
+    const order =
+    orders.find(
+        o => o.id === currentOrderId
+    );
+
+    if(
+        !order ||
+        !order.files
+    ){
+        alert('لا توجد ملفات لهذا الطلب');
+        return;
+    }
+
+    const files = Object.values(
+        order.files
+    ).filter(Boolean);
+
+    if(files.length === 0){
+        alert('لا توجد ملفات للتحميل');
+        return;
+    }
+
+    files.forEach(file => {
+
+        const a =
+        document.createElement('a');
+
+        a.href =
+        '/uploads/' + file;
+
+        a.target =
+        '_blank';
+
+        a.download =
+        file;
+
+        document.body
+        .appendChild(a);
+
+        a.click();
+
+        a.remove();
+
+    });
+
+}
+
+/* ===== Services ===== */
+
+let currentServiceFilter = "ALL";
+
+function removeService(index){
+
+    services.splice(index,1);
+
+    localStorage.setItem(
+        'services',
+        JSON.stringify(services)
+    );
+
+    renderServices();
+
+}
+
+function removeService(index){
+
+    services.splice(index,1);
+
+    localStorage.setItem(
+        'services',
+        JSON.stringify(services)
+    );
+
+    renderServices();
+
+}
+
+function updateServicesDashboard(){
+
+    document.getElementById("totalServices").innerHTML =
+    services.length;
+
+    document.getElementById("pendingServices").innerHTML =
+    services.filter(x => x.status === "Pending").length;
+
+    document.getElementById("assignedServices").innerHTML =
+    services.filter(x => x.status === "Assigned").length;
+
+    document.getElementById("completedServices").innerHTML =
+    services.filter(x => x.status === "Completed").length;
+
+    document.getElementById("cancelledServices").innerHTML =
+    services.filter(x => x.status === "Cancelled").length;
+
+    let revenue = 0;
+
+    services.forEach(s => {
+
+        revenue += Number(s.price) || 0;
+
+    });
+
+    document.getElementById("servicesRevenue").innerHTML =
+    revenue.toFixed(2);
+
+}
+
+function filterServices(status){
+
+    currentServiceFilter = status;
+
+    renderServices();
+
+}
+
+function statusBadge(status){
+
+switch(status){
+
+case "Completed":
+
+return '<span class="badge bg-success">Completed</span>';
+
+case "Assigned":
+
+return '<span class="badge bg-info">Assigned</span>';
+
+case "On Route":
+
+return '<span class="badge bg-primary">On Route</span>';
+
+case "Cancelled":
+
+return '<span class="badge bg-danger">Cancelled</span>';
+
+default:
+
+return '<span class="badge bg-warning text-dark">Pending</span>';
+
+}
+
+}
+
+
+
+function priorityBadge(priority){
+
+switch(priority){
+
+case "High":
+
+return '<span class="badge bg-danger">High</span>';
+
+case "Medium":
+
+return '<span class="badge bg-warning text-dark">Medium</span>';
+
+default:
+
+return '<span class="badge bg-success">Low</span>';
+
+}
+
+}
+
+function renderServices() {
+
+    let html = "";
+
+    // نسخة من البيانات
+    let data = [...services];
+
+    // فلترة حسب الحالة
+    if(currentServiceFilter !== "ALL"){
+
+        data = data.filter(s => s.status === currentServiceFilter);
+
+    }
+
+    // البحث
+    const keyword = (
+        document.getElementById("serviceSearch")?.value || ""
+    ).toLowerCase();
+
+    if(keyword){
+
+        data = data.filter(s =>
+
+            (s.jobNo || "").toLowerCase().includes(keyword)
+
+            ||
+
+            (s.memberNo || "").toLowerCase().includes(keyword)
+
+            ||
+
+            (s.mobile || "").toLowerCase().includes(keyword)
+
+            ||
+
+            (s.vehicleNo || "").toLowerCase().includes(keyword)
+
+            ||
+
+            (s.vehicleModel || "").toLowerCase().includes(keyword)
+
+        );
+
+    }
+
+    // إنشاء الجدول
+    data.forEach((s,i)=>{
+html += `
+
+<tr>
+
+<td>${i+1}</td>
+
+<td>${s.jobNo||""}</td>
+
+<td>${statusBadge(s.status)}</td>
+
+<td>${priorityBadge(s.priority)}</td>
+
+<td>${s.memberNo||"-"}</td>
+
+<td>${s.driver||"-"}</td>
+
+<td>${s.vehicleNo||"-"}</td>
+
+<td>${s.price||0}</td>
+
+<td>${s.date||""}</td>
+
+<td>
+
+<button
+
+class="btn btn-sm btn-outline-info"
+
+onclick="viewTimeline(${services.indexOf(s)})">
+
+🕒
+
+</button>
+
+</td>
+
+<td>
+
+<button
+
+class="btn btn-sm btn-outline-success"
+
+onclick="printInvoice(${services.indexOf(s)})">
+
+🧾
+
+</button>
+
+</td>
+
+<td>
+
+<button
+
+class="btn btn-primary btn-sm"
+
+onclick="viewService(${services.indexOf(s)})">
+
+👁
+
+</button>
+
+<button
+
+class="btn btn-warning btn-sm"
+
+onclick="editService(${services.indexOf(s)})">
+
+✏
+
+</button>
+
+<button
+
+class="btn btn-danger btn-sm"
+
+onclick="removeService(${services.indexOf(s)})">
+
+🗑
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+    document.getElementById("servicesBody").innerHTML = html;
+
+    // إعادة تحميل DataTable
+
+    if($.fn.DataTable.isDataTable("#servicesTable")){
+
+        $("#servicesTable").DataTable().destroy();
+
+    }
+
+    $("#servicesTable").DataTable({
+
+        pageLength:10,
+
+        responsive:true,
+
+        destroy:true,
+
+        dom:'Bfrtip',
+
+        buttons:[
+
+            'copy',
+
+            'csv',
+
+            'excel',
+
+            'pdf',
+
+            'print'
+
+        ]
+
+    });
+
+    // تحديث Dashboard
+    updateServicesDashboard();
+
+}
+
+function generateServiceInfo() {
+
+    // رقم الخدمة يبدأ من 1001
+    const jobNo = 1001 + services.length;
+
+    document.getElementById("jobNo").value = jobNo;
+
+    // التاريخ والوقت الحالي
+    const now = new Date();
+
+    const date =
+        now.getFullYear() + "-" +
+        String(now.getMonth() + 1).padStart(2, "0") + "-" +
+        String(now.getDate()).padStart(2, "0") + " " +
+        String(now.getHours()).padStart(2, "0") + ":" +
+        String(now.getMinutes()).padStart(2, "0");
+document.getElementById("timeCreated").innerHTML =
+getCurrentTime();
+
+document.getElementById("timeAssigned").innerHTML="--";
+
+document.getElementById("timeStarted").innerHTML="--";
+
+document.getElementById("timeArrived").innerHTML="--";
+
+document.getElementById("timeCompleted").innerHTML="--";
+    document.getElementById("date").value = date;
+}
+
+function showAddService() {
+
+    generateServiceInfo();
+
+    document.getElementById("serviceForm").reset();
+
+    generateServiceInfo();
+
+    loadCustomersToEditor();
+
+    loadDriversToEditor();
+
+    loadVehiclesToEditor();
+
+    document
+        .getElementById("serviceEditor")
+        .classList.remove("d-none");
+
+}
+
+async function loadCustomersToEditor(){
+
+    const select = document.getElementById("customerSelect");
+
+    select.innerHTML =
+    '<option value="">Select Customer</option>';
+
+    customers.forEach(c=>{
+
+        select.innerHTML +=
+        `<option value="${c.id}">${c.name}</option>`;
+
+    });
+
+}
+
+document.getElementById("customerSelect").addEventListener("change", function () {
+
+    const id = this.value;
+
+    const customer = customers.find(c => String(c.id) === String(id));
+
+    if (!customer) return;
+
+    document.getElementById("memberNo").value =
+        customer.memberNo || "";
+
+    document.getElementById("mobile").value =
+        customer.mobile || "";
+
+    document.getElementById("customerName").value =
+        customer.name || "";
+
+    document.getElementById("customerAddress").value =
+        customer.address || "";
+
+});
+
+document.getElementById("driverSelect").addEventListener("change", function () {
+
+    const id = this.value;
+
+    const driver = drivers.find(d => String(d.id) === String(id));
+
+    if (!driver) return;
+
+    document.getElementById("driverMobile").value =
+        driver.mobile || "";
+
+    document.getElementById("driverStatus").value =
+        driver.status || "";
+
+});
+
+document.getElementById("vehicleSelect").addEventListener("change", function () {
+
+    const id = this.value;
+
+    const car = cars.find(c => String(c.id) === String(id));
+
+    if (!car) return;
+
+    document.getElementById("vehicleNo").value =
+        car.plate || "";
+
+    document.getElementById("vehicleModel").value =
+        car.model || "";
+
+    document.getElementById("color").value =
+        car.color || "";
+
+});
+
+async function loadDriversToEditor(){
+
+    const select = document.getElementById("driverSelect");
+
+    select.innerHTML =
+    '<option value="">Select Driver</option>';
+
+    drivers.forEach(d=>{
+
+        select.innerHTML +=
+        `<option value="${d.id}">${d.name}</option>`;
+
+    });
+
+}
+
+async function loadVehiclesToEditor(){
+
+    const select = document.getElementById("vehicleSelect");
+
+    select.innerHTML =
+    '<option value="">Select Vehicle</option>';
+
+    cars.forEach(c=>{
+
+        select.innerHTML +=
+        `<option value="${c.id}">${c.plate}</option>`;
+
+    });
+
+}
+
+let editingIndex = -1;
+function saveService() {
+
+function viewTimeline(index){
+
+alert("Timeline Service : "+services[index].jobNo);
+
+}
+
+
+
+function printInvoice(index){
+
+alert("Invoice Service : "+services[index].jobNo);
+
+}
+
+
+
+function viewService(index){
+
+console.log(services[index]);
+
+alert(JSON.stringify(services[index],null,2));
+
+}
+
+    const data = {
+        jobNo: document.getElementById("jobNo").value.trim(),
+        date: document.getElementById("date").value,
+        memberNo: document.getElementById("memberNo").value.trim(),
+        mobile: document.getElementById("mobile").value.trim(),
+        vehicleNo: document.getElementById("vehicleNo").value.trim(),
+        from: document.getElementById("from").value.trim(),
+        to: document.getElementById("to").value.trim(),
+        vehicleModel: document.getElementById("vehicleModel").value.trim(),
+        color: document.getElementById("color").value.trim(),
+        price: document.getElementById("price").value.trim(),
+        km: document.getElementById("km").value.trim()
+    };
+
+    console.log(data);
+
+    if(editingIndex==-1){
+        services.push(data);
+    }else{
+        services[editingIndex]=data;
+    }
+
+    localStorage.setItem("services",JSON.stringify(services));
+
+    renderServices();
+
+    document.getElementById("serviceForm").reset();
+
+    bootstrap.Modal.getInstance(
+        document.getElementById("addServiceModal")
+    ).hide();
+
+    console.log(services);
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    const search=document.getElementById("serviceSearch");
+
+    if(search){
+
+        search.addEventListener("keyup",renderServices);
+
+    }
+
+});
+
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Services Modal -->
+<div id="servicesModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+
+            <div class="modal-header bg-dark text-white">
+                <h4>📝 إدارة الخدمات</h4>
+
+                <button class="btn btn-danger"
+                        onclick="closeServices()">
+                    ✖
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+            <!-- ===== Services Dashboard ===== -->
+
+<div class="row mb-3 g-3">
+
+    <div class="col-md-2">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body text-center">
+                <h3 id="totalServices">0</h3>
+                <small>Total Services</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card bg-warning shadow">
+            <div class="card-body text-center">
+                <h3 id="pendingServices">0</h3>
+                <small>Pending</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card bg-info text-white shadow">
+            <div class="card-body text-center">
+                <h3 id="assignedServices">0</h3>
+                <small>Assigned</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body text-center">
+                <h3 id="completedServices">0</h3>
+                <small>Completed</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card bg-danger text-white shadow">
+            <div class="card-body text-center">
+                <h3 id="cancelledServices">0</h3>
+                <small>Cancelled</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card bg-dark text-warning shadow">
+            <div class="card-body text-center">
+                <h3 id="servicesRevenue">0</h3>
+                <small>Revenue</small>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="d-flex gap-2 mb-3 flex-wrap">
+
+<button class="btn btn-outline-light"
+onclick="filterServices('ALL')">
+📋 All
+</button>
+
+<button class="btn btn-outline-warning"
+onclick="filterServices('Pending')">
+⏳ Pending
+</button>
+
+<button class="btn btn-outline-info"
+onclick="filterServices('Assigned')">
+🚚 Assigned
+</button>
+
+<button class="btn btn-outline-primary"
+onclick="filterServices('On Route')">
+📍 On Route
+</button>
+
+<button class="btn btn-outline-success"
+onclick="filterServices('Completed')">
+✔ Completed
+</button>
+
+<button class="btn btn-outline-danger"
+onclick="filterServices('Cancelled')">
+❌ Cancelled
+</button>
+
+<div class="ms-auto d-flex gap-2">
+
+<input
+id="serviceSearch"
+class="form-control"
+placeholder="Search Service">
+
+<button
+class="btn btn-success"
+onclick="showAddService()">
+
+➕ New Service
+
+</button>
+
+</div>
+
+</div>
+
+<div id="serviceEditor" class="card shadow mb-4 d-none">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between">
+
+        <h4 class="mb-0">
+            🚚 Service Editor
+        </h4>
+
+        <div>
+
+            <button
+            class="btn btn-success btn-sm"
+            onclick="saveService()">
+
+                💾 Save
+
+            </button>
+
+            <button
+            class="btn btn-secondary btn-sm"
+            onclick="closeServiceEditor()">
+
+                ✖ Close
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-3">
+
+            <div class="col-md-3">
+
+                <label>Job No</label>
+
+                <input id="jobNo"
+                       class="form-control"
+                       readonly>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label>Date</label>
+
+                <input id="date"
+                       class="form-control"
+                       readonly>
+
+<!-- ================= SERVICE TIMELINE ================= -->
+
+<div class="card shadow-sm mb-3">
+
+    <div class="card-header bg-dark text-white">
+
+        🕒 Service Timeline
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="timeline">
+
+            <div class="timeline-item">
+
+                <span class="timeline-icon bg-primary">1</span>
+
+                <div class="timeline-content">
+
+                    <strong>Service Created</strong>
+
+                    <div id="timeCreated" class="text-muted small">--</div>
+
+                </div>
+
+            </div>
+
+            <div class="timeline-item">
+
+                <span class="timeline-icon bg-info">2</span>
+
+                <div class="timeline-content">
+
+                    <strong>Driver Assigned</strong>
+
+                    <div id="timeAssigned" class="text-muted small">--</div>
+
+                </div>
+
+            </div>
+
+            <div class="timeline-item">
+
+                <span class="timeline-icon bg-warning">3</span>
+
+                <div class="timeline-content">
+
+                    <strong>Driver Started</strong>
+
+                    <div id="timeStarted" class="text-muted small">--</div>
+
+                </div>
+
+            </div>
+
+            <div class="timeline-item">
+
+                <span class="timeline-icon bg-secondary">4</span>
+
+                <div class="timeline-content">
+
+                    <strong>Arrived Customer</strong>
+
+                    <div id="timeArrived" class="text-muted small">--</div>
+
+                </div>
+
+            </div>
+
+            <div class="timeline-item">
+
+                <span class="timeline-icon bg-success">5</span>
+
+                <div class="timeline-content">
+
+                    <strong>Completed</strong>
+
+                    <div id="timeCompleted" class="text-muted small">--</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= CUSTOMER ================= -->
+
+<div class="card shadow-sm mb-3">
+
+    <div class="card-header bg-success text-white">
+
+        👤 Customer Information
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-3">
+
+            <div class="col-md-4">
+
+                <label class="form-label">Customer</label>
+
+                <select id="customerSelect" class="form-select">
+
+                    <option value="">Select Customer</option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="form-label">Member No</label>
+
+                <input id="memberNo"
+                       class="form-control"
+                       readonly>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="form-label">Mobile</label>
+
+                <input id="mobile"
+                       class="form-control"
+                       readonly>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="form-label">Customer Name</label>
+
+                <input id="customerName"
+                       class="form-control"
+                       readonly>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="form-label">Address</label>
+
+                <input id="customerAddress"
+                       class="form-control"
+                       readonly>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= DRIVER ================= -->
+
+<div class="card shadow-sm mb-3">
+
+    <div class="card-header bg-info text-white">
+
+        🚚 Driver
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-3">
+
+            <div class="col-md-4">
+
+                <label>Driver</label>
+
+                <select id="driverSelect"
+                        class="form-select">
+
+                    <option value="">Select Driver</option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label>Driver Mobile</label>
+
+                <input id="driverMobile"
+                       class="form-control"
+                       readonly>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label>Status</label>
+
+                <input id="driverStatus"
+                       class="form-control"
+                       readonly>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= VEHICLE ================= -->
+
+<div class="card shadow-sm mb-3">
+
+    <div class="card-header bg-warning">
+
+        🚗 Vehicle
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-3">
+
+            <div class="col-md-4">
+
+                <label>Vehicle</label>
+
+                <select id="vehicleSelect"
+                        class="form-select">
+
+                    <option value="">Select Vehicle</option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label>Plate No</label>
+
+                <input id="vehicleNo"
+                       class="form-control"
+                       readonly>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label>Model</label>
+
+                <input id="vehicleModel"
+                       class="form-control"
+                       readonly>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label>Status</label>
+
+                <select id="status"
+                        class="form-select">
+
+                    <option>Pending</option>
+
+                    <option>Assigned</option>
+
+                    <option>On Route</option>
+
+                    <option>Completed</option>
+
+                    <option>Cancelled</option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label>Priority</label>
+
+                <select id="priority"
+                        class="form-select">
+
+                    <option>Low</option>
+
+                    <option selected>
+
+                        Medium
+
+                    </option>
+
+                    <option>High</option>
+
+                    <option>Emergency</option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label>Member No</label>
+
+                <input id="memberNo"
+                       class="form-control">
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label>Mobile</label>
+
+                <input id="mobile"
+                       class="form-control">
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label>Customer</label>
+
+                <input id="customerName"
+                       class="form-control">
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label>Vehicle No</label>
+
+                <input id="vehicleNo"
+                       class="form-control">
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label>Vehicle Model</label>
+
+                <input id="vehicleModel"
+                       class="form-control">
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label>Color</label>
+
+                <input id="color"
+                       class="form-control">
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label>Pickup</label>
+
+                <input id="from"
+                       class="form-control">
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label>Destination</label>
+
+                <input id="to"
+                       class="form-control">
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label>KM</label>
+
+                <input id="km"
+                       class="form-control">
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label>Price</label>
+
+                <input id="price"
+                       class="form-control">
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label>Notes</label>
+
+                <textarea id="notes"
+                          class="form-control"
+                          rows="2"></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+                <table id="servicesTable"
+                       class="table table-bordered table-striped table-hover">
+
+              <thead class="table-dark">
+
+<tr>
+
+<th>#</th>
+
+<th>Job No</th>
+
+<th>Status</th>
+
+<th>Priority</th>
+
+<th>Customer</th>
+
+<th>Driver</th>
+
+<th>Vehicle</th>
+
+<th>Price</th>
+
+<th>Created</th>
+
+<th>Timeline</th>
+
+<th>Invoice</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+                    <tbody id="servicesBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addServiceModal" tabindex="-1">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Add Service</h5>
+            </div>
+
+            <div class="modal-body">
+
+                <form id="serviceForm">
+
+                    <div class="row g-2">
+
+                        <div class="col-md-4">
+                            <input id="jobNo" class="form-control" readonly>
+                        </div>
+
+                        <div class="col-md-4">
+                            <input id="date" class="form-control" readonly>
+                        </div>
+
+                        <div class="col-md-4">
+                            <input id="memberNo" class="form-control" placeholder="Member No">
+                        </div>
+
+                        <div class="col-md-4">
+                            <input id="mobile" class="form-control" placeholder="Mobile">
+                        </div>
+
+                        <div class="col-md-4">
+                            <input id="vehicleNo" class="form-control" placeholder="Vehicle No">
+                        </div>
+
+                        <div class="col-md-4">
+                            <input id="from" class="form-control" placeholder="From">
+                        </div>
+
+                        <div class="col-md-4">
+                            <input id="to" class="form-control" placeholder="To">
+                        </div>
+
+                        <div class="col-md-4">
+                            <input id="vehicleModel" class="form-control" placeholder="Vehicle Model">
+                        </div>
+
+                        <div class="col-md-4">
+                            <input id="color" class="form-control" placeholder="Color">
+                        </div>
+
+                        <div class="col-md-4">
+                            <input id="price" class="form-control" placeholder="Price">
+                        </div>
+
+                        <div class="col-md-4">
+                            <input id="km" class="form-control" placeholder="KM">
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+                         <div class="col-12">
+    <label class="form-label">📎 ملفات الخدمة</label>
+
+    <input
+        type="file"
+        id="serviceFiles"
+        class="form-control"
+        multiple
+        accept="image/*,.pdf,.doc,.docx,.xlsx">
+</div>
+
+<div class="col-12 mt-2">
+    <div id="uploadedFiles"></div>
+</div>
+
+            <div class="modal-footer">
+
+                <button class="btn btn-success" onclick="saveService();return false;">
+                  Save
+                </button>
+                <button class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 </body>
 </html>
